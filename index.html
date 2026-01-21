@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FindSafe - Privacy-First Lost & Found</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #2d3436;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            padding: 40px 20px;
+            animation: fadeIn 1s ease-in;
+        }
+
+        .header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+            text-shadow: 2px 4px 6px rgba(0,0,0,0.2);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.95;
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 8px 20px;
+            border-radius: 25px;
+            margin-top: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            background: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .tab:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+
+        .tab.active {
+            background: #e94560;
+            color: white;
+        }
+
+        .content {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            animation: slideUp 0.5s ease-out;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            margin-bottom: 30px;
+            color: #1a1a2e;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #2d3436;
+        }
+
+        .form-input, .form-textarea, .form-select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e1e8ed;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-family: 'Poppins', sans-serif;
+            transition: border-color 0.3s;
+        }
+
+        .form-input:focus, .form-textarea:focus, .form-select:focus {
+            outline: none;
+            border-color: #e94560;
+        }
+
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #e94560, #c23a53);
+            color: white;
+            box-shadow: 0 4px 15px rgba(233, 69, 96, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(233, 69, 96, 0.4);
+        }
+
+        .btn-secondary {
+            background: #636e72;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #2d3436;
+        }
+
+        .btn-success {
+            background: #06d6a0;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            border-left: 4px solid #e94560;
+            transition: transform 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #1a1a2e;
+        }
+
+        .card-id {
+            background: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+        .qr-box {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .qr-image {
+            max-width: 200px;
+            border: 2px solid #e1e8ed;
+            border-radius: 8px;
+        }
+
+        .qr-url {
+            margin-top: 10px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            word-break: break-all;
+            color: #636e72;
+            font-family: monospace;
+        }
+
+        .message-box {
+            background: #fff;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+        }
+
+        .message-time {
+            font-size: 0.85rem;
+            color: #636e72;
+            margin-bottom: 5px;
+        }
+
+        .alert {
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border-left: 4px solid #06d6a0;
+        }
+
+        .alert-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border-left: 4px solid #17a2b8;
+        }
+
+        .alert-warning {
+            background: #fff3cd;
+            color: #856404;
+            border-left: 4px solid #ffc107;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border-left: 4px solid #dc3545;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #e94560, #c23a53);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 50px;
+            color: #636e72;
+        }
+
+        .empty-icon {
+            font-size: 4rem;
+            opacity: 0.3;
+            margin-bottom: 20px;
+        }
+
+        .how-works {
+            display: grid;
+            gap: 25px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .step {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+        }
+
+        .step-number {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .step-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .instructions {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .instructions h4 {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: #856404;
+        }
+
+        .instructions ol, .instructions ul {
+            margin-left: 20px;
+            line-height: 1.8;
+        }
+
+        .instructions li {
+            margin-bottom: 10px;
+        }
+
+        .demo-note {
+            background: #d1ecf1;
+            border-left: 4px solid #17a2b8;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .demo-note h4 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: #0c5460;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            .content {
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔐 FindSafe</h1>
+            <p>Privacy-First Lost & Found System</p>
+            <div class="badge">🔒 Your contact info stays private</div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('owner')">👤 Item Owner</button>
+            <button class="tab" onclick="showTab('how')">💡 How It Works</button>
+            <button class="tab" onclick="showTab('finder')">🔍 Found Item?</button>
+        </div>
+
+        <!-- Owner Dashboard -->
+        <div id="ownerTab" class="content">
+            <div class="demo-note">
+                <h4>⚠️ Important - For Production Use:</h4>
+                <p><strong>This is a demo version that runs locally in your browser.</strong> For QR codes to work when scanned:</p>
+                <ul>
+                    <li>You need to <strong>host this website online</strong> (e.g., on GitHub Pages, Netlify, Vercel)</li>
+                    <li>QR codes will contain your website's URL (e.g., https://yoursite.com?item=FS-XXX)</li>
+                    <li>Anyone can scan the QR code and reach your website</li>
+                </ul>
+                <p><strong>For testing locally:</strong> Use the Item ID to manually test the finder flow</p>
+            </div>
+
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-number" id="itemCount">0</div>
+                    <div class="stat-label">Protected Items</div>
+                </div>
+                <div class="stat-card" style="background: linear-gradient(135deg, #06d6a0, #05b88a);">
+                    <div class="stat-number" id="messageCount">0</div>
+                    <div class="stat-label">Messages Received</div>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-bottom: 30px;">
+                <button class="btn btn-primary" onclick="showAddForm()">➕ Register New Item</button>
+            </div>
+
+            <!-- Add Item Form -->
+            <div id="addForm" class="hidden" style="margin-bottom: 30px;">
+                <h3 class="section-title" style="font-size: 1.8rem;">Register New Item</h3>
+                <form onsubmit="addItem(event)">
+                    <div class="form-group">
+                        <label class="form-label">Item Name *</label>
+                        <input type="text" id="itemName" class="form-input" placeholder="e.g., Black Backpack, iPhone 13" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Description</label>
+                        <textarea id="itemDesc" class="form-textarea" placeholder="Add identifying details (optional)"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Category</label>
+                        <select id="itemCategory" class="form-select">
+                            <option value="personal">Personal Item</option>
+                            <option value="electronics">Electronics</option>
+                            <option value="bag">Bag/Luggage</option>
+                            <option value="keys">Keys</option>
+                            <option value="pet">Pet Tag</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <button type="submit" class="btn btn-primary">🔐 Generate QR Code</button>
+                        <button type="button" class="btn btn-secondary" onclick="hideAddForm()">Cancel</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Items List -->
+            <div id="itemsList" class="grid"></div>
+            <div id="emptyState" class="empty">
+                <div class="empty-icon">📦</div>
+                <h3>No Items Registered Yet</h3>
+                <p>Start protecting your belongings by registering your first item!</p>
+            </div>
+        </div>
+
+        <!-- How It Works -->
+        <div id="howTab" class="content hidden">
+            <h2 class="section-title">How FindSafe Works</h2>
+            
+            <div class="demo-note">
+                <h4>📱 QR Code Scanning Requirements:</h4>
+                <p><strong>For QR codes to work properly, this app must be hosted online with a real URL.</strong></p>
+                <p>Deployment options:</p>
+                <ul>
+                    <li><strong>GitHub Pages:</strong> Free, easy (upload to GitHub repo, enable Pages)</li>
+                    <li><strong>Netlify:</strong> Free, drag & drop deployment</li>
+                    <li><strong>Vercel:</strong> Free, automatic deployments</li>
+                    <li><strong>Your own web server:</strong> Full control</li>
+                </ul>
+                <p>Once deployed, QR codes will link to: <code>https://yoursite.com?item=FS-XXXXX</code></p>
+            </div>
+
+            <div class="instructions">
+                <h4>📱 How to Scan QR Codes (Once Deployed):</h4>
+                <ol>
+                    <li><strong>iPhone Users:</strong> Open Camera app → Point at QR → Tap yellow notification</li>
+                    <li><strong>Android Users:</strong> Open Camera or Google Lens → Point at QR → Tap link</li>
+                    <li><strong>Alternative:</strong> Use any QR scanner app from your app store</li>
+                </ol>
+            </div>
+
+            <div class="how-works">
+                <div class="step">
+                    <div class="step-number">1️⃣</div>
+                    <div class="step-title">Register Your Items</div>
+                    <p>Create unique QR codes for your belongings. Print and attach them to bags, keys, electronics, or anything valuable.</p>
+                </div>
+                <div class="step" style="background: linear-gradient(135deg, #e94560 0%, #c23a53 100%);">
+                    <div class="step-number">2️⃣</div>
+                    <div class="step-title">Someone Finds Your Item</div>
+                    <p>When someone finds your item, they scan the QR code with their phone camera. They'll be taken to your website automatically!</p>
+                </div>
+                <div class="step" style="background: linear-gradient(135deg, #06d6a0 0%, #05b88a 100%);">
+                    <div class="step-number">3️⃣</div>
+                    <div class="step-title">Get Connected Safely</div>
+                    <p>The finder sends you a message through our secure portal without seeing your personal information. Your privacy is protected!</p>
+                </div>
+            </div>
+
+            <div style="margin-top: 30px; padding: 25px; background: #f8f9fa; border-radius: 15px;">
+                <h3 style="text-align: center; margin-bottom: 20px; color: #1a1a2e;">🔒 Why Privacy Matters</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+                    <div style="text-align: center;">
+                        <div style="font-size: 2.5rem; margin-bottom: 10px;">🛡️</div>
+                        <strong>No Exposed Data</strong>
+                        <p style="font-size: 0.9rem; color: #636e72; margin-top: 5px;">Your contact info stays hidden</p>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 2.5rem; margin-bottom: 10px;">🔐</div>
+                        <strong>Anonymous Messaging</strong>
+                        <p style="font-size: 0.9rem; color: #636e72; margin-top: 5px;">Communicate safely with finders</p>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 2.5rem; margin-bottom: 10px;">✨</div>
+                        <strong>Full Control</strong>
+                        <p style="font-size: 0.9rem; color: #636e72; margin-top: 5px;">You decide when to share details</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Finder Portal -->
+        <div id="finderTab" class="content hidden">
+            <div id="finderScanner">
+                <h2 class="section-title">Found an Item?</h2>
+                
+                <div class="instructions">
+                    <h4>🧪 Testing the Finder Experience:</h4>
+                    <ol>
+                        <li>Go to the <strong>"Item Owner"</strong> tab</li>
+                        <li>Create a test item</li>
+                        <li>Copy the <strong>Item ID</strong> (e.g., FS-ABC123)</li>
+                        <li>Come back here and paste it below</li>
+                        <li>Click "Find" to see what finders would see!</li>
+                    </ol>
+                </div>
+
+                <div class="alert alert-info">
+                    <strong>📱 Note:</strong> When this app is hosted online, people will scan QR codes and be automatically brought here with the Item ID pre-filled!
+                </div>
+                
+                <div style="text-align: center; margin-top: 20px;">
+                    <label class="form-label">Enter Item ID to Test:</label>
+                    <div style="display: flex; gap: 10px; max-width: 400px; margin: 10px auto;">
+                        <input type="text" id="manualItemId" class="form-input" placeholder="FS-XXXXXXX">
+                        <button class="btn btn-primary" onclick="loadFoundItem()">Find</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="finderMessage" class="hidden">
+                <!-- Item details and message form will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Generate unique ID
+        function generateId() {
+            return 'FS-' + Math.random().toString(36).substr(2, 9).toUpperCase();
+        }
+
+        // Storage functions
+        function getData() {
+            const data = localStorage.getItem('findsafe_data');
+            return data ? JSON.parse(data) : { items: [] };
+        }
+
+        function saveData(data) {
+            localStorage.setItem('findsafe_data', JSON.stringify(data));
+        }
+
+        // Generate QR URL - for production use
+        function getQRUrl(itemId) {
+            // For demo: shows what the URL would be
+            const baseUrl = window.location.origin + window.location.pathname;
+            const fullUrl = baseUrl + '?item=' + itemId;
+            return `https://chart.googleapis.com/chart?cht=qr&chs=200x200&chl=${encodeURIComponent(fullUrl)}`;
+        }
+
+        function getItemUrl(itemId) {
+            return window.location.origin + window.location.pathname + '?item=' + itemId;
+        }
+
+        // Tab navigation
+        function showTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.content').forEach(c => c.classList.add('hidden'));
+            
+            event.target.classList.add('active');
+            document.getElementById(tab + 'Tab').classList.remove('hidden');
+            
+            if (tab === 'owner') {
+                loadItems();
+            }
+        }
+
+        // Show/hide add form
+        function showAddForm() {
+            document.getElementById('addForm').classList.remove('hidden');
+            window.scrollTo({ top: document.getElementById('addForm').offsetTop - 100, behavior: 'smooth' });
+        }
+
+        function hideAddForm() {
+            document.getElementById('addForm').classList.add('hidden');
+            document.getElementById('itemName').value = '';
+            document.getElementById('itemDesc').value = '';
+        }
+
+        // Add new item
+        function addItem(e) {
+            e.preventDefault();
+            
+            const data = getData();
+            const newItem = {
+                id: generateId(),
+                name: document.getElementById('itemName').value,
+                description: document.getElementById('itemDesc').value,
+                category: document.getElementById('itemCategory').value,
+                createdAt: new Date().toISOString(),
+                messages: []
+            };
+            
+            data.items.push(newItem);
+            saveData(data);
+            
+            hideAddForm();
+            loadItems();
+        }
+
+        // Copy to clipboard
+        function copyToClipboard(text, button) {
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = button.textContent;
+                button.textContent = '✓ Copied!';
+                button.style.background = '#06d6a0';
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.style.background = '';
+                }, 2000);
+            });
+        }
+
+        // Load and display items
+        function loadItems() {
+            const data = getData();
+            const itemsList = document.getElementById('itemsList');
+            const emptyState = document.getElementById('emptyState');
+            
+            // Update stats
+            document.getElementById('itemCount').textContent = data.items.length;
+            const totalMessages = data.items.reduce((sum, item) => sum + (item.messages?.length || 0), 0);
+            document.getElementById('messageCount').textContent = totalMessages;
+            
+            if (data.items.length === 0) {
+                itemsList.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                return;
+            }
+            
+            emptyState.classList.add('hidden');
+            itemsList.innerHTML = data.items.map(item => `
+                <div class="card">
+                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
+                        <div class="card-title">${item.name}</div>
+                        <div class="card-id">${item.id}</div>
+                    </div>
+                    ${item.description ? `<p style="color: #636e72; margin-bottom: 10px;">${item.description}</p>` : ''}
+                    <div style="display: inline-block; padding: 4px 12px; background: white; border-radius: 15px; font-size: 0.85rem; margin-bottom: 15px;">
+                        ${item.category}
+                    </div>
+                    <div class="qr-box">
+                        <img src="${getQRUrl(item.id)}" alt="QR Code for ${item.name}" class="qr-image">
+                        <div class="qr-url">
+                            <strong>URL:</strong> ${getItemUrl(item.id)}
+                        </div>
+                        <div style="margin-top: 10px;">
+                            <span style="background: #06d6a0; color: white; padding: 6px 12px; border-radius: 15px; font-size: 0.9rem; font-weight: 600;">
+                                🔒 Privacy Protected
+                            </span>
+                        </div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px;">
+                        <button class="btn btn-success" onclick="downloadQR('${item.id}', '${item.name}')">⬇️ Download QR</button>
+                        <button class="btn btn-secondary" onclick="copyToClipboard('${item.id}', this)">📋 Copy ID</button>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 10px;">
+                        <button class="btn btn-danger" onclick="deleteItem('${item.id}')">🗑️ Delete Item</button>
+                    </div>
+                    ${item.messages && item.messages.length > 0 ? `
+                        <div style="margin-top: 20px; padding-top: 20px; border-top: 2px solid #e1e8ed;">
+                            <strong>📬 Messages (${item.messages.length})</strong>
+                            ${item.messages.map(msg => `
+                                <div class="message-box">
+                                    <div class="message-time">${new Date(msg.timestamp).toLocaleString()}</div>
+                                    <div>${msg.message}</div>
+                                    ${msg.contact ? `<div style="margin-top: 8px; color: #06d6a0; font-weight: 600;">📞 ${msg.contact}</div>` : ''}
+                                </div>
+                            `).join('')}
+                        </div>
+                    ` : ''}
+                </div>
+            `).join('');
+        }
+
+        // Download QR code
+        function downloadQR(itemId, itemName) {
+            const link = document.createElement('a');
+            link.download = `FindSafe-${itemName.replace(/\s+/g, '-')}-QR.png`;
+            link.href = getQRUrl(itemId);
+            link.click();
+        }
+
+        // Delete item
+        function deleteItem(itemId) {
+            if (confirm('Are you sure you want to delete this item?')) {
+                const data = getData();
+                data.items = data.items.filter(item => item.id !== itemId);
+                saveData(data);
+                loadItems();
+            }
+        }
+
+        // Finder: Load found item
+        function loadFoundItem() {
+            const itemId = document.getElementById('manualItemId').value.trim();
+            if (!itemId) {
+                alert('Please enter an Item ID');
+                return;
+            }
+            
+            const data = getData();
+            const item = data.items.find(i => i.id === itemId);
+            
+            const scanner = document.getElementById('finderScanner');
+            const messageDiv = document.getElementById('finderMessage');
+            
+            if (!item) {
+                messageDiv.innerHTML = `
+                    <div class="alert alert-warning">
+                        ⚠️ Item not found. Please check the Item ID and try again.
+                    </div>
+                    <button class="btn btn-secondary" onclick="resetFinder()">← Go Back</button>
+                `;
+                messageDiv.classList.remove('hidden');
+                scanner.classList.add('hidden');
+                return;
+            }
+            
+            scanner.classList.add('hidden');
+            messageDiv.innerHTML = `
+                <div class="step">
+                    <div class="step-number">🔍</div>
+                    <div class="step-title">Item Found!</div>
+                    <p>Help reunite this item with its owner</p>
+                </div>
+                
+                <div id="successAlert" class="hidden"></div>
+                
+                <div style="background: #f8f9fa; padding: 25px; border-radius: 15px; margin: 20px 0; border-left: 4px solid #e94560;">
+                    <div style="font-size: 1.4rem; font-weight: 700; margin-bottom: 10px;">${item.name}</div>
+                    ${item.description ? `<p style="color: #636e72;">${item.description}</p>` : ''}
+                    <div style="margin-top: 10px;">
+                        <span style="background: white; padding: 6px 14px; border-radius: 15px; font-size: 0.9rem; font-weight: 600;">
+                            Category: ${item.category}
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="alert alert-info">
+                    🔒 <strong>Privacy Protected:</strong> Your message will be sent anonymously. The owner's contact information is kept private until they choose to respond.
+                </div>
+                
+                <form onsubmit="sendMessage(event, '${item.id}')">
+                    <div class="form-group">
+                        <label class="form-label">Your Message to Owner *</label>
+                        <textarea id="finderMsg" class="form-textarea" placeholder="Example: I found your item at Central Park near the fountain. I can meet you there tomorrow at 3pm or you can call me." required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Your Contact Information (optional)</label>
+                        <input type="text" id="finderContact" class="form-input" placeholder="Your phone number or email">
+                        <small style="color: #636e72; font-size: 0.9rem;">💡 Providing contact info helps the owner reach you faster</small>
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <button type="submit" class="btn btn-primary" style="flex: 1;">📤 Send Message</button>
+                        <button type="button" class="btn btn-secondary" onclick="resetFinder()">Cancel</button>
+                    </div>
+                </form>
+            `;
+            messageDiv.classList.remove('hidden');
+        }
+
+        function resetFinder() {
+            document.getElementById('finderScanner').classList.remove('hidden');
+            document.getElementById('finderMessage').classList.add('hidden');
+            document.getElementById('manualItemId').value = '';
+        }
+
+        // Send message from finder
+        function sendMessage(e, itemId) {
+            e.preventDefault();
+            
+            const data = getData();
+            const itemIndex = data.items.findIndex(i => i.id === itemId);
+            
+            if (itemIndex !== -1) {
+                if (!data.items[itemIndex].messages) {
+                    data.items[itemIndex].messages = [];
+                }
+                
+                data.items[itemIndex].messages.push({
+                    message: document.getElementById('finderMsg').value,
+                    contact: document.getElementById('finderContact').value,
+                    timestamp: new Date().toISOString()
+                });
+                
+                saveData(data);
+                
+                document.getElementById('successAlert').innerHTML = `
+                    <div class="alert alert-success">
+                        ✅ <strong>Message sent successfully!</strong> The owner has been notified and will reach out to you soon.
+                    </div>
+                `;
+                document.getElementById('successAlert').classList.remove('hidden');
+                
+                document.getElementById('finderMsg').value = '';
+                document.getElementById('finderContact').value = '';
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        // Check URL for item parameter
+        window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const itemId = urlParams.get('item');
+            
+            if (itemId) {
+                // Automatically switch to finder tab and load item
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.content').forEach(c => c.classList.add('hidden'));
+                document.getElementById('finderTab').classList.remove('hidden');
+                document.querySelectorAll('.tab')[2].classList.add('active');
+                
+                document.getElementById('manualItemId').value = itemId;
+                setTimeout(() => loadFoundItem(), 100);
+            } else {
+                loadItems();
+            }
+        };
+    </script>
+</body>
+</html>
